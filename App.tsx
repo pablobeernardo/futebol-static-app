@@ -1,11 +1,55 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import TeamEntity from './entities/team-entity';
+import { useEffect, useState } from 'react';
+import TitleChampionship from './View/Components/title-championship';
+import TableChampionship from './View/Components/table-championship';
+import LegendTeams from './View/Components/legend-teams';
+
+
 
 export default function App() {
+
+  const [teams, setTeam] = useState<TeamEntity[]>([]);
+
+  useEffect(() => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer test_dd769753f45f74346dbf9e43181a45 ");
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders
+    };
+
+    let teamsPosition: TeamEntity[] = [];
+
+    fetch("https://api.api-futebol.com.br/v1/campeonatos/10/tabela", requestOptions)
+      .then(response => response.text())
+      .then(result => JSON.parse(result))
+      .then(dataJson => {
+        dataJson.map((team) => {
+
+          const dataTeam = {
+            id: team['time']['time_id'],
+            position: team['posicao'],
+            team_shield_url: team['time']['escudo'],
+            team_name: team['time']['nome_popular'],
+            team_points: team['pontos'],
+          };
+
+          teamsPosition.push(dataTeam);
+        });
+        setTeam(teamsPosition);
+        console.log(teamsPosition);
+      })
+      .catch(error => console.log('error', error));
+  }, []);
+
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <TitleChampionship texto='Campeonato Brasileiro' />
+      <LegendTeams texto='' texto1={'Posição'} texto2={'Clube'} texto3={'Pontos'} />
+      <TableChampionship teams={teams} />
     </View>
   );
 }
@@ -15,6 +59,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    marginBottom: 16,
+    marginHorizontal: 16,
   },
+
 });
