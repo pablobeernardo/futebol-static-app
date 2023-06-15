@@ -1,20 +1,26 @@
-import { View , Text, StyleSheet} from "react-native";
+import { View , Text, StyleSheet, TouchableOpacity} from "react-native";
 import { Image } from 'expo-image';
 
 
 
 interface Props {
  team: any;
+ navigation: any;
 }
 
 export default function ItemTeam(props: Props) {
     return (
+      <TouchableOpacity onPress={() => {
+        props.navigation.navigate('detail', props.team)
+      }}>
         <View style={styles.items}>
-            <Image style={styles.team_shield} source={props.team.item.team_shield_url} />
-            <Text style={styles.team_position}>{props.team.item.position}</Text>
-            <Text style={styles.team_name}>{props.team.item.team_name}</Text>
-            <Text style={styles.team_points}>{props.team.item.team_points}</Text>
+              <Image style={styles.team_shield} source={props.team.item.team_shield_url} />
+              <Text style={styles.team_position}>{props.team.item.position}</Text>
+              <Text style={styles.team_name}>{props.team.item.team_name}</Text>
+              <Text style={styles.team_points}>{props.team.item.team_points}</Text>
         </View>
+      </TouchableOpacity>
+
     )
 }
 

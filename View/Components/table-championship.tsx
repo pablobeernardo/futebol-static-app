@@ -3,6 +3,7 @@ import ItemTeam from "./item-team";
 
 interface Props{
  teams: any
+ navigation: any;
 }
 
 export default function TableChampionship(props:Props){
@@ -11,7 +12,7 @@ export default function TableChampionship(props:Props){
         <FlatList data={props.teams}
           keyExtractor={(item) => item.id.toString()}
           renderItem={(team) =>
-            <ItemTeam team={team} />
+            <ItemTeam team={team} navigation={props.navigation} />
           }
         />
       </View>
